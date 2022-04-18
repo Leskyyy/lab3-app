@@ -6,6 +6,7 @@ export default function Food(props) {
     // }
 
     const [rowContent, setRowContent] = React.useState(props)
+    const [rowDeleted, setRowDeleted] = React.useState(false)
 
     let showRow = !rowContent.editable
 
@@ -16,7 +17,6 @@ export default function Food(props) {
                 [event.target.name]: event.target.value
             }
         })
-        console.log(rowContent)
     }
 
     function saveContent() {
@@ -26,11 +26,15 @@ export default function Food(props) {
                 editable: false
             }
         })
-        console.log(rowContent)
+    }
+
+    function deleteRow() {
+        setRowDeleted(true)
     }
 
     
     return (
+        !rowDeleted &&
         <tr className="foodTable">
             {showRow && <td>{rowContent.name}</td>}
             {!showRow && <td><input name="name" onChange={handleInputChange}/></td>}
@@ -45,6 +49,7 @@ export default function Food(props) {
             {showRow && <td>{rowContent.rating}</td>}
             {!showRow && <td><input name="rating" onChange={handleInputChange}/></td>}
             <td><button onClick={saveContent}>Save content</button></td>
+            <td><button onClick={deleteRow}>Delete content</button></td>
         </tr>
         
     )
