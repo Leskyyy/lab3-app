@@ -9,6 +9,10 @@ export default function App() {
     const [foods, setFoods] = React.useState(foodsJSON)
     const [sortProperty, setSortProperty] = React.useState('name')
     const [sortNormal, setSortNormal] = React.useState(1)
+    const [filterProperty, setFilterProperty] = React.useState({
+        propertyName: "",
+        filterValue: ""
+    })
     
     // function toggle(id) {
     //     setSquares(prevSquares => {
@@ -33,8 +37,18 @@ export default function App() {
             return [...prevFoods, newItem]
         })
     }
+
+    let foodElements
+
+    if(filterProperty.propertyName !== "" && filterProperty.filterValue !== ""){
+        console.log(filterProperty.propertyName, filterProperty.filterValue)
+        foodElements = foods.filter(food => food[filterProperty.propertyName].startsWith([filterProperty.filterValue]))
+    }else{
+        foodElements = foods
+    }
     
-    let foodElements = foods.sort((a, b) => a[sortProperty] > b[sortProperty] ? sortNormal : (-1 * sortNormal)).map(food => (
+    foodElements = foodElements.sort((a, b) => a[sortProperty] > b[sortProperty] ? sortNormal : (-1 * sortNormal))
+                            .map(food => (
         <Food 
             key={food.id} 
             name={food.name} 
@@ -46,14 +60,21 @@ export default function App() {
         />
     ))
 
-    function sortByRating(event) {
-        if(sortProperty == event.target.name){
+    function sortBy(event) {
+        if(sortProperty === event.target.name){
             setSortProperty(event.target.name)
             setSortNormal(sortNormal * -1)
         }else{
             setSortProperty(event.target.name)
             setSortNormal(1)
         }
+    }
+
+    function filterBy(event){
+        setFilterProperty({
+            propertyName: event.target.name,
+            filterValue: event.target.value
+        })
     }
     
     return (
@@ -70,16 +91,30 @@ export default function App() {
                     </tr>
                     <tr>
                         <th>
-                            <button name='name' onClick={sortByRating}>Sort by name</button>
+                            <button name='name' onClick={sortBy}>Sort by name</button>
                         </th>
                         <th>
-                            <button name='description' onClick={sortByRating}>Sort by description</button>
+                            <button name='description' onClick={sortBy}>Sort by description</button>
                         </th>
                         <th>
                             
                         </th>
                         <th>
-                            <button name='rating' onClick={sortByRating}>Sort by rating</button>
+                            <button name='rating' onClick={sortBy}>Sort by rating</button>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input name='name' onChange={filterBy} />
+                        </th>
+                        <th>
+                            <input name='description' onChange={filterBy} />
+                        </th>
+                        <th>
+                            
+                        </th>
+                        <th>
+                            <input name='rating' onChange={filterBy} />
                         </th>
                     </tr>
                 </thead>

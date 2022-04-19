@@ -28,8 +28,17 @@ export default function Food(props) {
         })
     }
 
-    function deleteRow() {
+    function deleteContent() {
         setRowDeleted(true)
+    }
+
+    function editContent() {
+        setRowContent(prevRowData => {
+            return {
+                ...prevRowData,
+                editable: true
+            }
+        })
     }
 
     
@@ -37,19 +46,20 @@ export default function Food(props) {
         !rowDeleted &&
         <tr className="foodTable">
             {showRow && <td>{rowContent.name}</td>}
-            {!showRow && <td><input name="name" onChange={handleInputChange}/></td>}
+            {!showRow && <td><input name="name" value={rowContent.name} onChange={handleInputChange}/></td>}
             {showRow && <td>{rowContent.description}</td>}
-            {!showRow && <td><input name="description" onChange={handleInputChange}/></td> }
+            {!showRow && <td><input name="description" value={rowContent.description} onChange={handleInputChange}/></td> }
             {showRow && 
                 <td>
                     <img src={rowContent.image} width="50px" height="50px" />
                 </td>
             }
-            {!showRow && <td><input name="image" onChange={handleInputChange}/></td> }
+            {!showRow && <td><input name="image" value={rowContent.image} onChange={handleInputChange}/></td> }
             {showRow && <td>{rowContent.rating}</td>}
-            {!showRow && <td><input name="rating" onChange={handleInputChange}/></td>}
+            {!showRow && <td><input name="rating" value={rowContent.rating} onChange={handleInputChange}/></td>}
             <td><button onClick={saveContent}>Save content</button></td>
-            <td><button onClick={deleteRow}>Delete content</button></td>
+            <td><button onClick={deleteContent}>Delete content</button></td>
+            <td><button onClick={editContent}>Edit content</button></td>
         </tr>
         
     )
