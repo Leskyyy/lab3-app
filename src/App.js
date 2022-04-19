@@ -10,8 +10,9 @@ export default function App() {
     const [sortProperty, setSortProperty] = React.useState('name')
     const [sortNormal, setSortNormal] = React.useState(1)
     const [filterProperty, setFilterProperty] = React.useState({
-        propertyName: "",
-        filterValue: ""
+        filterName: "",
+        filterDescription: "",
+        filterRating: ""
     })
     
     // function toggle(id) {
@@ -38,15 +39,20 @@ export default function App() {
         })
     }
 
-    let foodElements
+    let foodElements = foods
 
-    if(filterProperty.propertyName !== "" && filterProperty.filterValue !== ""){
-        console.log(filterProperty.propertyName, filterProperty.filterValue)
-        foodElements = foods.filter(food => food[filterProperty.propertyName].startsWith([filterProperty.filterValue]))
-    }else{
-        foodElements = foods
+    if(filterProperty.filterName !== ""){
+        foodElements = foodElements.filter(food => food.name.startsWith([filterProperty.filterName]))
     }
-    
+
+    if(filterProperty.filterDescription !== ""){
+        foodElements = foodElements.filter(food => food.description.startsWith([filterProperty.filterDescription]))
+    }
+
+    if(filterProperty.filterRating !== ""){
+        foodElements = foodElements.filter(food => food.rating.startsWith([filterProperty.filterRating]))
+    }
+
     foodElements = foodElements.sort((a, b) => a[sortProperty] > b[sortProperty] ? sortNormal : (-1 * sortNormal))
                             .map(food => (
         <Food 
@@ -71,9 +77,11 @@ export default function App() {
     }
 
     function filterBy(event){
-        setFilterProperty({
-            propertyName: event.target.name,
-            filterValue: event.target.value
+        setFilterProperty(prevFilter => {
+            return{
+                ...prevFilter,
+                [event.target.name]: event.target.value
+            }
         })
     }
     
@@ -105,16 +113,16 @@ export default function App() {
                     </tr>
                     <tr>
                         <th>
-                            <input name='name' onChange={filterBy} />
+                            <input name='filterName' onChange={filterBy} />
                         </th>
                         <th>
-                            <input name='description' onChange={filterBy} />
+                            <input name='filterDescription' onChange={filterBy} />
                         </th>
                         <th>
                             
                         </th>
                         <th>
-                            <input name='rating' onChange={filterBy} />
+                            <input name='filterRating' onChange={filterBy} />
                         </th>
                     </tr>
                 </thead>
